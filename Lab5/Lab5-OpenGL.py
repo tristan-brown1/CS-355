@@ -128,11 +128,6 @@ def drawCar():
 def start ():
     glMatrixMode(GL_MODELVIEW)
     glLoadIdentity()
-    # glTranslated(0,0,-6)
-    # glMatrixMode(GL_PROJECTION)
-    # glLoadIdentity()
-    # gluPerspective(170, 1, 1, 100)
-    # glMatrixMode(GL_MODELVIEW)
 
 
 def display():
@@ -142,18 +137,7 @@ def display():
 
     
     #Your Code Here
-    # glMatrixMode(GL_PROJECTION)
-    # glLoadIdentity()
-    # glMatrixMode(GL_MODELVIEW)
-    # glLoadIdentity()
-
-    # glMatrixMode(GL_PROJECTION)
-    # glLoadIdentity()
-    # glOrtho(-10, 10, -10, 10, 1, -100)
-    # # gluPerspective(170, 1, 1, 100)
-    # glMatrixMode(GL_MODELVIEW)
     
-
     drawHouse()
     
     
@@ -172,87 +156,62 @@ def keyboard(key, x, y):
   
     if key == b'w':
         print("W is pressed")
-        # glTranslated(0,0,.5)
-
-        # CAMERA_X -= math.sin(math.radians(CAMERA_ROTATE))
-        # CAMERA_Z -= math.cos(math.radians(CAMERA_ROTATE))
-        # glTranslated(math.sin(math.radians(CAMERA_ROTATE)), 0, math.cos(math.radians(CAMERA_ROTATE)))
-
-        z = 1.0 * math.cos(math.radians(CAMERA_ROTATE))
-        x = 1.0 * math.sin(math.radians(CAMERA_ROTATE))
-        CAMERA_Z += z
-        CAMERA_X += x
-        glTranslated(x, 0.0, z)
+        glLoadIdentity()
+        CAMERA_Z += 1
+        glRotated(CAMERA_ROTATE,0,1,0)
+        glTranslated(CAMERA_X,CAMERA_Y,CAMERA_Z)
 
     if key == b's':
         print("S is pressed")
-        # glTranslated(0,0,-.5)
-        # CAMERA_X += math.sin(math.radians(CAMERA_ROTATE))
-        # CAMERA_Z += math.cos(math.radians(CAMERA_ROTATE))
-        # glTranslated(math.sin(math.radians(CAMERA_ROTATE)), 0, math.cos(math.radians(CAMERA_ROTATE)))
-
-        z = -1.0 * math.cos(math.radians(CAMERA_ROTATE))
-        x = -1.0 * math.sin(math.radians(CAMERA_ROTATE))
-        CAMERA_Z += z
-        CAMERA_X += x
-        glTranslated(x, 0.0, z)
+        glLoadIdentity()
+        CAMERA_Z -= 1
+        glRotated(CAMERA_ROTATE,0,1,0)
+        glTranslated(CAMERA_X,CAMERA_Y,CAMERA_Z)
 
     if key == b'a':
         print("A is pressed")
-        # glTranslated(1,0,0)
-        # CAMERA_X += math.sin(math.radians(CAMERA_ROTATE))
-        # CAMERA_Z -= math.cos(math.radians(CAMERA_ROTATE))
-        # glTranslated(math.sin(math.radians(CAMERA_ROTATE)), 0, math.cos(math.radians(CAMERA_ROTATE)))
-
-        z = 1.0 * math.cos(math.radians(CAMERA_ROTATE))
-        x = -1.0 * math.sin(math.radians(CAMERA_ROTATE))
-        CAMERA_Z += z
-        CAMERA_X += x
-        glTranslated(x, 0.0, z)
+        glLoadIdentity()
+        CAMERA_X += 1
+        glRotated(CAMERA_ROTATE,0,1,0)
+        glTranslated(CAMERA_X,CAMERA_Y,CAMERA_Z)
 
     if key == b'd':
         print("D is pressed")    
-        # glTranslated(-1,0,0)
-        # CAMERA_X -= math.sin(math.radians(CAMERA_ROTATE))
-        # CAMERA_Z += math.cos(math.radians(CAMERA_ROTATE))
-        # glTranslated(math.sin(math.radians(CAMERA_ROTATE)), 0, math.cos(math.radians(CAMERA_ROTATE)))
-
-        z = -1.0 * math.cos(math.radians(CAMERA_ROTATE))
-        x = 1.0 * math.sin(math.radians(CAMERA_ROTATE))
-        CAMERA_Z += z
-        CAMERA_X += x
-        glTranslated(x, 0.0, z)
+        glLoadIdentity()
+        CAMERA_X -= 1
+        glRotated(CAMERA_ROTATE,0,1,0)
+        glTranslated(CAMERA_X,CAMERA_Y,CAMERA_Z)
 
     if key == b'q':
         print("Q is pressed")
-        CAMERA_ROTATE += 1
-        if CAMERA_ROTATE > 360:
-            CAMERA_ROTATE = 0
-
-        glTranslated(-CAMERA_X,-CAMERA_Y,-CAMERA_Z)
-        glRotated(-1,0,1,0)
+        glTranslated(CAMERA_X,CAMERA_Y,CAMERA_Z)
+        glLoadIdentity()
+        CAMERA_ROTATE -= 1
+        glRotated(0,0,1,0)
+        glRotated(0,1,0,0)
+        glRotated(CAMERA_ROTATE,0,1,0)
         glTranslated(CAMERA_X,CAMERA_Y,CAMERA_Z)
 
     if key == b'e':
         print("E is pressed")
-        # glMatrixMode(GL_PROJECTION)
-        # glRotated(1,0,1,0)
-        # glMatrixMode(GL_MODELVIEW)
-        CAMERA_ROTATE -= 1
-        if CAMERA_ROTATE < 0:
-            CAMERA_ROTATE = 360
-
-        glTranslated(-CAMERA_X,-CAMERA_Y,-CAMERA_Z)
-        glRotated(1,0,1,0)
+        glLoadIdentity()
+        CAMERA_ROTATE += 1
+        glRotated(0,0,1,0)
+        glRotated(0,1,0,0)
+        glRotated(CAMERA_ROTATE,0,1,0)
         glTranslated(CAMERA_X,CAMERA_Y,CAMERA_Z)
 
     if key == b'r':
         print("R is pressed")
-        glTranslated(0,-1,0)
+        glLoadIdentity()
+        CAMERA_Y -= 1
+        glTranslated(CAMERA_X,CAMERA_Y,CAMERA_Z)
 
     if key == b'f':
         print("F is pressed")
-        glTranslated(0,1,0)
+        glLoadIdentity()
+        CAMERA_Y += 1
+        glTranslated(CAMERA_X,CAMERA_Y,CAMERA_Z)
 
     if key == b'h':
         print("H is pressed")
