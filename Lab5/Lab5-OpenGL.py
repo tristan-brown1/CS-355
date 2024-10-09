@@ -20,7 +20,7 @@ DISPLAY_WIDTH = 500.0
 DISPLAY_HEIGHT = 500.0
 CAMERA_X = 0
 CAMERA_Y = 0
-CAMERA_Z = 0
+CAMERA_Z = -10
 CAMERA_ROTATE = 0
 CAMERA_VIEW = "perspective"
 
@@ -80,54 +80,12 @@ def drawHouse ():
     glVertex3f(0, 8, -5)
     glEnd()
 
-def drawCar():
-	glLineWidth(2.5)
-	glColor3f(0.0, 1.0, 0.0)
-	glBegin(GL_LINES)
-	#Front Side
-	glVertex3f(-3, 2, 2)
-	glVertex3f(-2, 3, 2)
-	glVertex3f(-2, 3, 2)
-	glVertex3f(2, 3, 2)
-	glVertex3f(2, 3, 2)
-	glVertex3f(3, 2, 2)
-	glVertex3f(3, 2, 2)
-	glVertex3f(3, 1, 2)
-	glVertex3f(3, 1, 2)
-	glVertex3f(-3, 1, 2)
-	glVertex3f(-3, 1, 2)
-	glVertex3f(-3, 2, 2)
-	#Back Side
-	glVertex3f(-3, 2, -2)
-	glVertex3f(-2, 3, -2)
-	glVertex3f(-2, 3, -2)
-	glVertex3f(2, 3, -2)
-	glVertex3f(2, 3, -2)
-	glVertex3f(3, 2, -2)
-	glVertex3f(3, 2, -2)
-	glVertex3f(3, 1, -2)
-	glVertex3f(3, 1, -2)
-	glVertex3f(-3, 1, -2)
-	glVertex3f(-3, 1, -2)
-	glVertex3f(-3, 2, -2)
-	#Connectors
-	glVertex3f(-3, 2, 2)
-	glVertex3f(-3, 2, -2)
-	glVertex3f(-2, 3, 2)
-	glVertex3f(-2, 3, -2)
-	glVertex3f(2, 3, 2)
-	glVertex3f(2, 3, -2)
-	glVertex3f(3, 2, 2)
-	glVertex3f(3, 2, -2)
-	glVertex3f(3, 1, 2)
-	glVertex3f(3, 1, -2)
-	glVertex3f(-3, 1, 2)
-	glVertex3f(-3, 1, -2)
-	glEnd()
+
 
 def start ():
     glMatrixMode(GL_MODELVIEW)
     glLoadIdentity()
+    glTranslated(CAMERA_X,CAMERA_Y,CAMERA_Z)
 
 
 def display():
@@ -140,14 +98,13 @@ def display():
     if CAMERA_VIEW == "perspective":
         glMatrixMode(GL_PROJECTION)
         glLoadIdentity()
-        gluPerspective(90, 1, 1, 50)
+        gluPerspective(90, 1, 0, 100)
         glMatrixMode(GL_MODELVIEW)
-        glTranslated(CAMERA_X,CAMERA_Y,CAMERA_Z)
 
     else:
         glMatrixMode(GL_PROJECTION)
         glLoadIdentity()
-        glOrtho(-10, 10, -10, 10, 1, -100)
+        glOrtho(-10, 10, -10, 10, 1, 100)
         glMatrixMode(GL_MODELVIEW)
 
     drawHouse()
@@ -170,28 +127,32 @@ def keyboard(key, x, y):
     if key == b'w':
         print("W is pressed")
         glLoadIdentity()
-        CAMERA_Z += 1
+        CAMERA_X -= math.sin(math.radians(CAMERA_ROTATE))
+        CAMERA_Z += math.cos(math.radians(CAMERA_ROTATE))
         glRotated(CAMERA_ROTATE,0,1,0)
         glTranslated(CAMERA_X,CAMERA_Y,CAMERA_Z)
 
     if key == b's':
         print("S is pressed")
         glLoadIdentity()
-        CAMERA_Z -= 1
+        CAMERA_X += math.sin(math.radians(CAMERA_ROTATE))
+        CAMERA_Z -= math.cos(math.radians(CAMERA_ROTATE))
         glRotated(CAMERA_ROTATE,0,1,0)
         glTranslated(CAMERA_X,CAMERA_Y,CAMERA_Z)
 
     if key == b'a':
         print("A is pressed")
         glLoadIdentity()
-        CAMERA_X += 1
+        CAMERA_X -= math.sin(math.radians(CAMERA_ROTATE - 90))
+        CAMERA_Z += math.cos(math.radians(CAMERA_ROTATE - 90))
         glRotated(CAMERA_ROTATE,0,1,0)
         glTranslated(CAMERA_X,CAMERA_Y,CAMERA_Z)
 
     if key == b'd':
         print("D is pressed")    
         glLoadIdentity()
-        CAMERA_X -= 1
+        CAMERA_X -= math.sin(math.radians(CAMERA_ROTATE + 90))
+        CAMERA_Z += math.cos(math.radians(CAMERA_ROTATE + 90))
         glRotated(CAMERA_ROTATE,0,1,0)
         glTranslated(CAMERA_X,CAMERA_Y,CAMERA_Z)
 
@@ -230,7 +191,7 @@ def keyboard(key, x, y):
         glLoadIdentity()
         CAMERA_X = 0
         CAMERA_Y = 0
-        CAMERA_Z = -5
+        CAMERA_Z = -10
         CAMERA_ROTATE = 0
         glTranslated(CAMERA_X,CAMERA_Y,CAMERA_Z)
     
