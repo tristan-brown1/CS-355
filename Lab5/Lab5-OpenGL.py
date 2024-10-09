@@ -20,7 +20,7 @@ DISPLAY_WIDTH = 500.0
 DISPLAY_HEIGHT = 500.0
 CAMERA_X = 0
 CAMERA_Y = 0
-CAMERA_Z = 0 
+CAMERA_Z = 0
 CAMERA_ROTATE = 0
 CAMERA_VIEW = "perspective"
 
@@ -137,7 +137,19 @@ def display():
 
     
     #Your Code Here
-    
+    if CAMERA_VIEW == "perspective":
+        glMatrixMode(GL_PROJECTION)
+        glLoadIdentity()
+        gluPerspective(90, 1, 1, 50)
+        glMatrixMode(GL_MODELVIEW)
+        glTranslated(CAMERA_X,CAMERA_Y,CAMERA_Z)
+
+    else:
+        glMatrixMode(GL_PROJECTION)
+        glLoadIdentity()
+        glOrtho(-10, 10, -10, 10, 1, -100)
+        glMatrixMode(GL_MODELVIEW)
+
     drawHouse()
     
     
@@ -149,6 +161,7 @@ def keyboard(key, x, y):
     global CAMERA_Y
     global CAMERA_Z
     global CAMERA_ROTATE
+    global CAMERA_VIEW
     
     if key == chr(27):
         import sys
@@ -184,55 +197,52 @@ def keyboard(key, x, y):
 
     if key == b'q':
         print("Q is pressed")
-        glTranslated(CAMERA_X,CAMERA_Y,CAMERA_Z)
         glLoadIdentity()
         CAMERA_ROTATE -= 1
-        glRotated(0,0,1,0)
-        glRotated(0,1,0,0)
         glRotated(CAMERA_ROTATE,0,1,0)
         glTranslated(CAMERA_X,CAMERA_Y,CAMERA_Z)
+        
 
     if key == b'e':
         print("E is pressed")
         glLoadIdentity()
         CAMERA_ROTATE += 1
-        glRotated(0,0,1,0)
-        glRotated(0,1,0,0)
         glRotated(CAMERA_ROTATE,0,1,0)
         glTranslated(CAMERA_X,CAMERA_Y,CAMERA_Z)
+        
 
     if key == b'r':
         print("R is pressed")
         glLoadIdentity()
         CAMERA_Y -= 1
+        glRotated(CAMERA_ROTATE,0,1,0)
         glTranslated(CAMERA_X,CAMERA_Y,CAMERA_Z)
 
     if key == b'f':
         print("F is pressed")
         glLoadIdentity()
         CAMERA_Y += 1
+        glRotated(CAMERA_ROTATE,0,1,0)
         glTranslated(CAMERA_X,CAMERA_Y,CAMERA_Z)
 
     if key == b'h':
         print("H is pressed")
         glLoadIdentity()
-        glTranslated(0,0,-6)
+        CAMERA_X = 0
+        CAMERA_Y = 0
+        CAMERA_Z = -5
+        CAMERA_ROTATE = 0
+        glTranslated(CAMERA_X,CAMERA_Y,CAMERA_Z)
     
     if key == b'o':
         print("O is pressed")
         CAMERA_VIEW = "orthographic"
-        glMatrixMode(GL_PROJECTION)
-        glLoadIdentity()
-        glOrtho(-10, 10, -10, 10, 1, -100)
-        glMatrixMode(GL_MODELVIEW)
+        
 
     if key == b'p':
         print("P is pressed")
         CAMERA_VIEW = "perspective"
-        glMatrixMode(GL_PROJECTION)
-        glLoadIdentity()
-        gluPerspective(170, 1, 1, 100)
-        glMatrixMode(GL_MODELVIEW)
+        
   
     glutPostRedisplay()
 
