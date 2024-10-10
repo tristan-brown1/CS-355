@@ -98,13 +98,13 @@ def display():
     if CAMERA_VIEW == "perspective":
         glMatrixMode(GL_PROJECTION)
         glLoadIdentity()
-        gluPerspective(90, 1, 0, 100)
+        gluPerspective(90, 1, 0, 10000)
         glMatrixMode(GL_MODELVIEW)
 
     else:
         glMatrixMode(GL_PROJECTION)
         glLoadIdentity()
-        glOrtho(-10, 10, -10, 10, 1, 100)
+        glOrtho(-20, 20, -20, 20, 1, 100)
         glMatrixMode(GL_MODELVIEW)
 
     drawHouse()
