@@ -24,6 +24,8 @@ CAMERA_Z = -10
 CAMERA_ROTATE = 0
 CAMERA_VIEW = "perspective"
 
+CAR_MOVE = -40
+TIRE_ROTATION = 0
 
 def init(): 
     glClearColor (0.0, 0.0, 0.0, 0.0)
@@ -213,11 +215,109 @@ def display():
         glOrtho(-20, 20, -20, 20, 1, 100)
         glMatrixMode(GL_MODELVIEW)
 
+    glPushMatrix()
     drawHouse()
-    drawCar()
+    glPopMatrix()
     
+    glPushMatrix()
+    glTranslated(-20, 0, 0)
+    drawHouse()
+    glPopMatrix()
+
+    glPushMatrix()
+    glTranslated(-40, 0, 0)
+    drawHouse()
+    glPopMatrix()
+
+    glPushMatrix()
+    glTranslated(20, 0, 0)
+    drawHouse()
+    glPopMatrix()
+
+    glPushMatrix()
+    glTranslated(40, 0, 0)
+    drawHouse()
+    glPopMatrix()
+
+
+
+    glPushMatrix()
+    glRotated(180,0,1,0)
+    glTranslated(0, 0, -40)
+    drawHouse()
+    glPopMatrix()
+    
+    glPushMatrix()
+    glRotated(180,0,1,0)
+    glTranslated(-20, 0, -40)
+    drawHouse()
+    glPopMatrix()
+
+    glPushMatrix()
+    glRotated(180,0,1,0)
+    glTranslated(-40, 0, -40)
+    drawHouse()
+    glPopMatrix()
+
+    glPushMatrix()
+    glRotated(180,0,1,0)
+    glTranslated(20, 0, -40)
+    drawHouse()
+    glPopMatrix()
+
+    glPushMatrix()
+    glRotated(180,0,1,0)
+    glTranslated(40, 0, -40)
+    drawHouse()
+    glPopMatrix()
+
+
+    #car model is updated here 
+    glPushMatrix()
+    glTranslated(CAR_MOVE,0,25)
+    drawCar()
+
+    glTranslated(2,0,2.5)
+    glRotated(TIRE_ROTATION,0,0,1)
+    drawTire()
+
+    glPushMatrix()
+    glTranslated(0,0,-5)
+    drawTire()
+    glPopMatrix()
+
+    glPopMatrix()
+
+
+    glPushMatrix()
+    glTranslated(CAR_MOVE,0,25)    
+    glTranslated(-2,0,2.5)
+    glRotated(TIRE_ROTATION,0,0,1)
+    drawTire()
+    
+    glPushMatrix()
+    glTranslated(0,0,-5)
+    drawTire()
+    glPopMatrix()
+    glPopMatrix()
+    
+
+    
+    
+
+
+
     glFlush()
     
+def update(value):
+    global CAR_MOVE
+    global TIRE_ROTATION
+
+    CAR_MOVE += 0.005
+    TIRE_ROTATION -= 0.1
+
+    glutPostRedisplay()
+    glutTimerFunc(1, update, 0)
 
 def keyboard(key, x, y):
     global CAMERA_X
@@ -225,6 +325,8 @@ def keyboard(key, x, y):
     global CAMERA_Z
     global CAMERA_ROTATE
     global CAMERA_VIEW
+    global TIRE_ROTATION
+    global CAR_MOVE
     
     if key == chr(27):
         import sys
@@ -297,8 +399,10 @@ def keyboard(key, x, y):
         glLoadIdentity()
         CAMERA_X = 0
         CAMERA_Y = 0
-        CAMERA_Z = -10
+        CAMERA_Z = -30
         CAMERA_ROTATE = 0
+        CAR_MOVE = -40
+        TIRE_ROTATION = 0
         glTranslated(CAMERA_X,CAMERA_Y,CAMERA_Z)
     
     if key == b'o':
@@ -323,4 +427,5 @@ init ()
 start()
 glutDisplayFunc(display)
 glutKeyboardFunc(keyboard)
+glutTimerFunc(1, update, 0)
 glutMainLoop()
