@@ -29,6 +29,112 @@ def init():
     glClearColor (0.0, 0.0, 0.0, 0.0)
     glShadeModel (GL_FLAT)
 
+ 
+def drawCar():
+	glLineWidth(2.5)
+	glColor3f(0.0, 1.0, 0.0)
+	glBegin(GL_LINES)
+	#Front Side
+	glVertex3f(-3, 2, 2)
+	glVertex3f(-2, 3, 2)
+	glVertex3f(-2, 3, 2)
+	glVertex3f(2, 3, 2)
+	glVertex3f(2, 3, 2)
+	glVertex3f(3, 2, 2)
+	glVertex3f(3, 2, 2)
+	glVertex3f(3, 1, 2)
+	glVertex3f(3, 1, 2)
+	glVertex3f(-3, 1, 2)
+	glVertex3f(-3, 1, 2)
+	glVertex3f(-3, 2, 2)
+	#Back Side
+	glVertex3f(-3, 2, -2)
+	glVertex3f(-2, 3, -2)
+	glVertex3f(-2, 3, -2)
+	glVertex3f(2, 3, -2)
+	glVertex3f(2, 3, -2)
+	glVertex3f(3, 2, -2)
+	glVertex3f(3, 2, -2)
+	glVertex3f(3, 1, -2)
+	glVertex3f(3, 1, -2)
+	glVertex3f(-3, 1, -2)
+	glVertex3f(-3, 1, -2)
+	glVertex3f(-3, 2, -2)
+	#Connectors
+	glVertex3f(-3, 2, 2)
+	glVertex3f(-3, 2, -2)
+	glVertex3f(-2, 3, 2)
+	glVertex3f(-2, 3, -2)
+	glVertex3f(2, 3, 2)
+	glVertex3f(2, 3, -2)
+	glVertex3f(3, 2, 2)
+	glVertex3f(3, 2, -2)
+	glVertex3f(3, 1, 2)
+	glVertex3f(3, 1, -2)
+	glVertex3f(-3, 1, 2)
+	glVertex3f(-3, 1, -2)
+	glEnd()
+	
+def drawTire():
+	glLineWidth(2.5)
+	glColor3f(0.0, 0.0, 1.0)
+	glBegin(GL_LINES)
+	#Front Side
+	glVertex3f(-1, .5, .5)
+	glVertex3f(-.5, 1, .5)
+	glVertex3f(-.5, 1, .5)
+	glVertex3f(.5, 1, .5)
+	glVertex3f(.5, 1, .5)
+	glVertex3f(1, .5, .5)
+	glVertex3f(1, .5, .5)
+	glVertex3f(1, -.5, .5)
+	glVertex3f(1, -.5, .5)
+	glVertex3f(.5, -1, .5)
+	glVertex3f(.5, -1, .5)
+	glVertex3f(-.5, -1, .5)
+	glVertex3f(-.5, -1, .5)
+	glVertex3f(-1, -.5, .5)
+	glVertex3f(-1, -.5, .5)
+	glVertex3f(-1, .5, .5)
+	#Back Side
+	glVertex3f(-1, .5, -.5)
+	glVertex3f(-.5, 1, -.5)
+	glVertex3f(-.5, 1, -.5)
+	glVertex3f(.5, 1, -.5)
+	glVertex3f(.5, 1, -.5)
+	glVertex3f(1, .5, -.5)
+	glVertex3f(1, .5, -.5)
+	glVertex3f(1, -.5, -.5)
+	glVertex3f(1, -.5, -.5)
+	glVertex3f(.5, -1, -.5)
+	glVertex3f(.5, -1, -.5)
+	glVertex3f(-.5, -1, -.5)
+	glVertex3f(-.5, -1, -.5)
+	glVertex3f(-1, -.5, -.5)
+	glVertex3f(-1, -.5, -.5)
+	glVertex3f(-1, .5, -.5)
+	#Connectors
+	glVertex3f(-1, .5, .5)
+	glVertex3f(-1, .5, -.5)
+	glVertex3f(-.5, 1, .5)
+	glVertex3f(-.5, 1, -.5)
+	glVertex3f(.5, 1, .5)
+	glVertex3f(.5, 1, -.5)
+	glVertex3f(1, .5, .5)
+	glVertex3f(1, .5, -.5)
+	glVertex3f(1, -.5, .5)
+	glVertex3f(1, -.5, -.5)
+	glVertex3f(.5, -1, .5)
+	glVertex3f(.5, -1, -.5)
+	glVertex3f(-.5, -1, .5)
+	glVertex3f(-.5, -1, -.5)
+	glVertex3f(-1, -.5, .5)
+	glVertex3f(-1, -.5, -.5)
+	glEnd()
+		
+
+
+
 def drawHouse ():
     glLineWidth(2.5)
     glColor3f(1.0, 0.0, 0.0)
@@ -98,7 +204,7 @@ def display():
     if CAMERA_VIEW == "perspective":
         glMatrixMode(GL_PROJECTION)
         glLoadIdentity()
-        gluPerspective(90, 1, 0, 10000)
+        gluPerspective(90, 1, 0, 1000000000000)
         glMatrixMode(GL_MODELVIEW)
 
     else:
@@ -108,7 +214,7 @@ def display():
         glMatrixMode(GL_MODELVIEW)
 
     drawHouse()
-    
+    drawCar()
     
     glFlush()
     
