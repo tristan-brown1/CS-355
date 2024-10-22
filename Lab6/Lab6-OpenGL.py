@@ -20,10 +20,9 @@ DISPLAY_WIDTH = 500.0
 DISPLAY_HEIGHT = 500.0
 CAMERA_X = 0
 CAMERA_Y = 0
-CAMERA_Z = -10
+CAMERA_Z = -30
 CAMERA_ROTATE = 0
 CAMERA_VIEW = "perspective"
-
 CAR_MOVE = -40
 TIRE_ROTATION = 0
 
@@ -187,7 +186,6 @@ def drawHouse ():
     glVertex3f(0, 8, 5)
     glVertex3f(0, 8, -5)
     glEnd()
-
 
 
 def start ():
