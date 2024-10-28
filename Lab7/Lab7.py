@@ -191,36 +191,45 @@ linelist = loadHouse()
 
 #Loop until the user clicks the close button.
 while not done:
- 
+
 	# This limits the while loop to a max of 100 times per second.
 	# Leave this out and we will use all CPU we can.
-	clock.tick(100)
+    clock.tick(100)
 
 	# Clear the screen and set the screen background
-	screen.fill(BLACK)
+    screen.fill(BLACK)
 
 	#Controller Code#
 	#####################################################################
 
-	for event in pygame.event.get():
-		if event.type == pygame.QUIT: # If user clicked close
-			done=True
-			
-	pressed = pygame.key.get_pressed()
+    for event in pygame.event.get():
+	    if event.type == pygame.QUIT: # If user clicked close
+		    done=True
+            
+    
+    pressed = pygame.key.get_pressed()
+    
+    if pressed[pygame.K_w]:
+        print("w is pressed")
+    if pressed[pygame.K_a]:
+        print("a is pressed")
+    if pressed[pygame.K_s]:
+        print("s is pressed")
+    if pressed[pygame.K_d]:
+        print("d is pressed")
 
-	if pressed[pygame.K_a]:
-		print("a is pressed")
+
 
 	#Viewer Code#
 	#####################################################################
 
-	for s in linelist:
+    for s in linelist:
 		#BOGUS DRAWING PARAMETERS SO YOU CAN SEE THE HOUSE WHEN YOU START UP
-		pygame.draw.line(screen, BLUE, (20*s.start.x+200, -20*s.start.y+200), (20*s.end.x+200, -20*s.end.y+200))
+	    pygame.draw.line(screen, BLUE, (20*s.start.x+200, -20*s.start.y+200), (20*s.end.x+200, -20*s.end.y+200))
 
 	# Go ahead and update the screen with what we've drawn.
 	# This MUST happen after all the other drawing commands.
-	pygame.display.flip()
+    pygame.display.flip()
  
 # Be IDLE friendly
 pygame.quit()
