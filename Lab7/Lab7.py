@@ -1,8 +1,9 @@
 # Import a library of functions called 'pygame'
 import math
-
 import pygame
 from math import pi
+import numpy as np
+
 
 class Point:
     def __init__(self,x,y):
@@ -172,8 +173,14 @@ def loadTire():
 
 # create quite a bit here i think
 
-
-
+def draw_world():
+    pass
+def draw_house():
+    pass
+def draw_car():
+    pass
+def draw_tires():
+    pass
 
 # Initialize the game engine
 pygame.init()
@@ -278,9 +285,9 @@ while not done:
     #Viewer Code#
     #####################################################################
 
-    for s in linelist:
-        #BOGUS DRAWING PARAMETERS SO YOU CAN SEE THE HOUSE WHEN YOU START UP
-        pygame.draw.line(screen, BLUE, (20*s.start.x+200, -20*s.start.y+200), (20*s.end.x+200, -20*s.end.y+200))
+    # for s in linelist:
+    #     #BOGUS DRAWING PARAMETERS SO YOU CAN SEE THE HOUSE WHEN YOU START UP
+    #     pygame.draw.line(screen, BLUE, (20*s.start.x+200, -20*s.start.y+200), (20*s.end.x+200, -20*s.end.y+200))
 
     # Go ahead and update the screen with what we've drawn.
     # This MUST happen after all the other drawing commands.
