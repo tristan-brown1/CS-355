@@ -172,9 +172,16 @@ def loadTire():
 
 
 # create quite a bit here i think
-
-def draw_world():
+def generate_homogenous():
     pass
+def object_to_world():
+    pass
+def world_to_camera():
+    pass
+def clipping():
+    pass
+
+
 def draw_house():
     pass
 def draw_car():
@@ -211,8 +218,11 @@ CAMERA_ROTATE = 0
 CAMERA_VIEW = "perspective"
 CAR_MOVE = -40
 TIRE_ROTATION = 0
-
-
+clipping_matrix = np.array([])
+screen_display_matrix = np.array([])
+house_matrices = np.array([])
+car_matrices = np.array([])
+tire_matrices = np.array([])
 
 #Loop until the user clicks the close button.
 while not done:
