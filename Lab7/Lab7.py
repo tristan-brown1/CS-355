@@ -172,15 +172,31 @@ def loadTire():
 
 
 # create quite a bit here i think
-def generate_homogenous():
-    pass
+
+
+def convert_to_homogenous(regular_points):
+    homogenous_coordinates = []
+
+    # for all points passed in, homogenize them and return the new list of lines with homogenized points
+    for point in regular_points:
+        homogenous_coordinates.append(Line3D([point.start.x, point.start.y, point.start.z, 1],
+                                             [point.end.x, point.end.y, point.end.z, 1]))
+    return homogenous_coordinates
+
 def object_to_world():
     pass
+
 def world_to_camera():
     pass
+
+def clipping_tests():
+    pass
+
 def clipping():
     pass
 
+def viewport_transformation():
+    pass
 
 def draw_house():
     pass
@@ -295,9 +311,9 @@ while not done:
     #Viewer Code#
     #####################################################################
 
-    # for s in linelist:
-    #     #BOGUS DRAWING PARAMETERS SO YOU CAN SEE THE HOUSE WHEN YOU START UP
-    #     pygame.draw.line(screen, BLUE, (20*s.start.x+200, -20*s.start.y+200), (20*s.end.x+200, -20*s.end.y+200))
+    for s in linelist:
+        #BOGUS DRAWING PARAMETERS SO YOU CAN SEE THE HOUSE WHEN YOU START UP
+        pygame.draw.line(screen, BLUE, (20*s.start.x+200, -20*s.start.y+200), (20*s.end.x+200, -20*s.end.y+200))
 
     # Go ahead and update the screen with what we've drawn.
     # This MUST happen after all the other drawing commands.
