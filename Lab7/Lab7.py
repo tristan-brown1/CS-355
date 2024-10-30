@@ -183,11 +183,24 @@ def convert_to_homogenous(regular_points):
                                              [point.end.x, point.end.y, point.end.z, 1]))
     return homogenous_coordinates
 
-def object_to_world():
-    pass
+def object_to_world(homogenous_list, matrix_type):
+    obj_to_world_coordinates = []
+    for matrix in matrix_type:
+        for point in homogenous_list:
+            obj_to_world_coordinates.append(Line3D(matrix.dot(point.start),matrix.dot(point.end)))
 
-def world_to_camera():
-    pass
+    return obj_to_world_coordinates
+
+def world_to_camera(object_to_world_list, cam_x,cam_y,cam_z,camera_rotation):
+    camera_matrix = np.array([[math.cos(math.radians(camera_rotation)), 0, -math.sin(math.radians(camera_rotation)), -cam_x * math.cos(math.radians(camera_rotation)) - cam_z * math.sin(math.radians(camera_rotation))],
+                              [0, 1, 0, cam_y],
+                              [math.sin(math.radians(camera_rotation)), 0, math.cos(math.radians(camera_rotation)), -cam_x * math.sin(math.radians(camera_rotation)) + cam_z * math.cos(math.radians(camera_rotation))],
+                              [0, 0, 0, 1]])
+
+    world_to_camera_list = []
+    for j in object_to_world_list:
+        world_to_camera_list.append(Line3D(camera_matrix.dot(j.start),camera_matrix.dot(j.end)))
+
 
 def clipping_tests():
     pass
@@ -198,9 +211,18 @@ def clipping():
 def viewport_transformation():
     pass
 
-def draw_house():
+def pipeline():
     pass
-def draw_car():
+
+def draw_house(house_list, cam_x, cam_y, cam_z, camera_rotation):
+    homogenous_list = convert_to_homogenous(house_list)
+    world_to_camera_list = world_to_camera(object_to_world(homogenous_list, house_matrices),cam_x,cam_y,cam_z,camera_rotation)
+    clipping(world_to_camera_list)
+    for i in world_to_camera_list:
+        pygame.draw.line(screen, RED, (i.start[0], i.start[1]), (i.end[0], i.end[1]))
+
+
+def draw_car(car_list, x, y, z, camera_rotation):
     pass
 def draw_tires():
     pass
@@ -226,7 +248,8 @@ done = False
 clock = pygame.time.Clock()
 start = Point(0.0,0.0)
 end = Point(0.0,0.0)
-linelist = loadHouse()
+house_line_list = loadHouse()
+car_line_list = loadCar()
 CAMERA_X = 0
 CAMERA_Y = 0
 CAMERA_Z = -30
@@ -310,8 +333,11 @@ while not done:
 
     #Viewer Code#
     #####################################################################
+    draw_house(house_line_list, CAMERA_X, CAMERA_Y, CAMERA_Z, CAMERA_ROTATE)
+    draw_car(car_line_list, CAMERA_X,CAMERA_Y, CAMERA_Z, CAMERA_ROTATE)
 
-    for s in linelist:
+
+    for s in house_line_list:
         #BOGUS DRAWING PARAMETERS SO YOU CAN SEE THE HOUSE WHEN YOU START UP
         pygame.draw.line(screen, BLUE, (20*s.start.x+200, -20*s.start.y+200), (20*s.end.x+200, -20*s.end.y+200))
 
