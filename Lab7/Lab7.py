@@ -1,4 +1,5 @@
 # Import a library of functions called 'pygame'
+import math as m
 import math
 import pygame
 from math import pi
@@ -192,9 +193,9 @@ def object_to_world(homogenous_list, matrix_type):
     return obj_to_world_coordinates
 
 def world_to_camera(object_to_world_list, cam_x,cam_y,cam_z,camera_rotation):
-    camera_matrix = np.array([[math.cos(math.radians(camera_rotation)), 0, -math.sin(math.radians(camera_rotation)), cam_x],
+    camera_matrix = np.array([[math.cos(math.radians(camera_rotation)), 0, -math.sin(math.radians(camera_rotation)), -cam_x * math.cos(math.radians(camera_rotation)) - cam_z * math.sin(math.radians(camera_rotation))],
                               [0, 1, 0, cam_y],
-                              [math.sin(math.radians(camera_rotation)), 0, math.cos(math.radians(camera_rotation)), cam_z],
+                              [math.sin(math.radians(camera_rotation)), 0, math.cos(math.radians(camera_rotation)), -cam_x * math.sin(math.radians(camera_rotation)) + cam_z * math.cos(math.radians(camera_rotation))],
                               [0, 0, 0, 1]])
 
     world_to_camera_list = []
@@ -245,25 +246,38 @@ def viewport_transformation(preview_list):
                                     [0, 0, 1]])
     view_list = []
     for line in preview_list:
-        startOut = screen_view_matrix.dot(line.start)
-        endOut = screen_view_matrix.dot(line.end)
-        view_list.append(Line3D(startOut, endOut))
+        starting = screen_view_matrix.dot(line.start)
+        ending = screen_view_matrix.dot(line.end)
+        view_list.append(Line3D(starting, ending))
     return view_list
 
-def pipeline(list_type, matrix_type, line_color, cam_x, cam_y, cam_z, camera_rotation):
+def pipeline(object_type, list_type, matrix_type, line_color, cam_x, cam_y, cam_z, camera_rotation):
     homogenous_list = convert_to_homogenous(list_type)
-    world_to_camera_list = world_to_camera(object_to_world(homogenous_list, matrix_type), cam_x, cam_y, cam_z,
-                                           camera_rotation)
+
+
+    if object_type == "car":
+        add_tires(tire_line_list, tire_matrices, BLUE, CAMERA_X, CAMERA_Y, CAMERA_Z, CAMERA_ROTATE)
+
+
+    world_to_camera_list = world_to_camera(object_to_world(homogenous_list, matrix_type), cam_x, cam_y, cam_z,camera_rotation)
     preview_list = clipping(world_to_camera_list)
     view_list = viewport_transformation(preview_list)
 
     for i in view_list:
         pygame.draw.line(screen, line_color, (i.start[0], i.start[1]), (i.end[0], i.end[1]))
 
-
-def draw_tires():
+def add_tires(list_type, matrix_type, line_color, cam_x, cam_y, cam_z, camera_rotation):
     pass
-
+    # homogenous_list = convert_to_homogenous(list_type)
+    # tire_positions = []
+    # for s in tire_matrices:
+    #     tire_positions.append(s.dot(car_matrices))
+    # world_to_camera_list = world_to_camera(object_to_world(homogenous_list, tire_positions), cam_x, cam_y, cam_z,camera_rotation)
+    # preview_list = clipping(world_to_camera_list)
+    # view_list = viewport_transformation(preview_list)
+    #
+    # for i in view_list:
+    #     pygame.draw.line(screen, line_color, (i.start[0], i.start[1]), (i.end[0], i.end[1]))
 # Initialize the game engine
 pygame.init()
  
@@ -287,6 +301,7 @@ start = Point(0.0,0.0)
 end = Point(0.0,0.0)
 house_line_list = loadHouse()
 car_line_list = loadCar()
+tire_line_list = loadTire()
 CAMERA_X = 0
 CAMERA_Y = 0
 CAMERA_Z = -30
@@ -353,7 +368,27 @@ car_matrices = np.array([
                     [0, 0, 1, 20],
                     [0, 0, 0, 1]]
                 ])
-tire_matrices = np.array([])
+tire_matrices = np.array([
+                    [[1,0,0,-62],
+                     [0,1,0,0],
+                     [0,0,1,20],
+                     [0,0,0,1]],
+
+                    [[1,0,0,-2],
+                     [0,1,0,0],
+                     [0,0,1,-2],
+                     [0,0,0,1]],
+
+                    [[1,0,0,4],
+                     [0,1,0,0],
+                     [0,0,1,4],
+                     [0,0,0,1]],
+
+                    [[1,0,0,-4],
+                     [0,1,0,0],
+                     [0,0,1,-4],
+                     [0,0,0,1]]
+                ])
 
 #Loop until the user clicks the close button.
 while not done:
@@ -377,25 +412,25 @@ while not done:
     
     if pressed[pygame.K_w]:
         print("w is pressed")
-        CAMERA_X -= math.sin(math.radians(CAMERA_ROTATE))
-        CAMERA_Z += math.cos(math.radians(CAMERA_ROTATE))
+        CAMERA_X += math.sin(math.radians(CAMERA_ROTATE))
+        CAMERA_Z -= math.cos(math.radians(CAMERA_ROTATE))
 
 
     if pressed[pygame.K_a]:
         print("a is pressed")
-        CAMERA_X -= math.sin(math.radians(CAMERA_ROTATE - 90))
-        CAMERA_Z += math.cos(math.radians(CAMERA_ROTATE - 90))
+        CAMERA_X -= math.cos(math.radians(CAMERA_ROTATE))
+        CAMERA_Z -= math.sin(math.radians(CAMERA_ROTATE))
 
 
     if pressed[pygame.K_s]:
         print("s is pressed")
-        CAMERA_X += math.sin(math.radians(CAMERA_ROTATE))
-        CAMERA_Z -= math.cos(math.radians(CAMERA_ROTATE))
+        CAMERA_X -= math.sin(math.radians(CAMERA_ROTATE))
+        CAMERA_Z += math.cos(math.radians(CAMERA_ROTATE))
 
     if pressed[pygame.K_d]:
         print("d is pressed")
-        CAMERA_X -= math.sin(math.radians(CAMERA_ROTATE + 90))
-        CAMERA_Z += math.cos(math.radians(CAMERA_ROTATE + 90))
+        CAMERA_X += math.cos(math.radians(CAMERA_ROTATE))
+        CAMERA_Z += math.sin(math.radians(CAMERA_ROTATE))
 
     if pressed[pygame.K_e]:
         print("e is pressed")
@@ -404,7 +439,6 @@ while not done:
     if pressed[pygame.K_q]:
         print("q is pressed")
         CAMERA_ROTATE -= 1
-
 
     if pressed[pygame.K_r]:
         print("r is pressed")
@@ -425,10 +459,9 @@ while not done:
 
     #Viewer Code#
     #####################################################################
-    # draw_car(car_line_list, CAMERA_X, CAMERA_Y, CAMERA_Z, CAMERA_ROTATE)
-    pipeline(house_line_list, house_matrices, RED, CAMERA_X, CAMERA_Y, CAMERA_Z, CAMERA_ROTATE)
-    pipeline(car_line_list, car_matrices, GREEN, CAMERA_X, CAMERA_Y, CAMERA_Z, CAMERA_ROTATE)
-
+    pipeline("house", house_line_list, house_matrices, RED, CAMERA_X, CAMERA_Y, CAMERA_Z, CAMERA_ROTATE)
+    pipeline("car", car_line_list, car_matrices, GREEN, CAMERA_X, CAMERA_Y, CAMERA_Z, CAMERA_ROTATE)
+    # pipeline(tire_line_list, tire_matrices, BLUE, CAMERA_X, CAMERA_Y, CAMERA_Z, CAMERA_ROTATE)
 
     # for s in house_line_list:
     #     #BOGUS DRAWING PARAMETERS SO YOU CAN SEE THE HOUSE WHEN YOU START UP
