@@ -369,24 +369,24 @@ car_matrices = np.array([
                     [0, 0, 0, 1]]
                 ])
 tire_matrices = np.array([
+                    [[1,0,0,-58],
+                     [0,1,0,1],
+                     [0,0,1,22.5],
+                     [0,0,0,1]],
+
+                    [[1,0,0,-58],
+                     [0,1,0,1],
+                     [0,0,1,17.5],
+                     [0,0,0,1]],
+
                     [[1,0,0,-62],
-                     [0,1,0,0],
-                     [0,0,1,20],
+                     [0,1,0,1],
+                     [0,0,1,17.5],
                      [0,0,0,1]],
 
-                    [[1,0,0,-2],
-                     [0,1,0,0],
-                     [0,0,1,-2],
-                     [0,0,0,1]],
-
-                    [[1,0,0,4],
-                     [0,1,0,0],
-                     [0,0,1,4],
-                     [0,0,0,1]],
-
-                    [[1,0,0,-4],
-                     [0,1,0,0],
-                     [0,0,1,-4],
+                    [[1,0,0,-62],
+                     [0,1,0,1],
+                     [0,0,1,22.5],
                      [0,0,0,1]]
                 ])
 
@@ -461,7 +461,7 @@ while not done:
     #####################################################################
     pipeline("house", house_line_list, house_matrices, RED, CAMERA_X, CAMERA_Y, CAMERA_Z, CAMERA_ROTATE)
     pipeline("car", car_line_list, car_matrices, GREEN, CAMERA_X, CAMERA_Y, CAMERA_Z, CAMERA_ROTATE)
-    # pipeline(tire_line_list, tire_matrices, BLUE, CAMERA_X, CAMERA_Y, CAMERA_Z, CAMERA_ROTATE)
+    pipeline("tire", tire_line_list, tire_matrices, BLUE, CAMERA_X, CAMERA_Y, CAMERA_Z, CAMERA_ROTATE)
 
     # for s in house_line_list:
     #     #BOGUS DRAWING PARAMETERS SO YOU CAN SEE THE HOUSE WHEN YOU START UP
