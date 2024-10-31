@@ -192,38 +192,75 @@ def object_to_world(homogenous_list, matrix_type):
     return obj_to_world_coordinates
 
 def world_to_camera(object_to_world_list, cam_x,cam_y,cam_z,camera_rotation):
-    camera_matrix = np.array([[math.cos(math.radians(camera_rotation)), 0, -math.sin(math.radians(camera_rotation)), -cam_x * math.cos(math.radians(camera_rotation)) - cam_z * math.sin(math.radians(camera_rotation))],
+    camera_matrix = np.array([[math.cos(math.radians(camera_rotation)), 0, -math.sin(math.radians(camera_rotation)), cam_x],
                               [0, 1, 0, cam_y],
-                              [math.sin(math.radians(camera_rotation)), 0, math.cos(math.radians(camera_rotation)), -cam_x * math.sin(math.radians(camera_rotation)) + cam_z * math.cos(math.radians(camera_rotation))],
+                              [math.sin(math.radians(camera_rotation)), 0, math.cos(math.radians(camera_rotation)), cam_z],
                               [0, 0, 0, 1]])
 
     world_to_camera_list = []
     for j in object_to_world_list:
         world_to_camera_list.append(Line3D(camera_matrix.dot(j.start),camera_matrix.dot(j.end)))
 
+    return world_to_camera_list
 
-def clipping_tests():
-    pass
+def clipping(world_to_camera_list):
+    near = .01
+    far = 100000
+    den = far - near
+    clip1 = (far + near) / den
+    clip2 = (-2 * far * near) / den
+    clipping_matrix = np.array([[1.73, 0, 0, 0],
+                     [0, 1.73, 0, 0],
+                     [0, 0, clip1, clip2],
+                     [0, 0, 1, 0]])
 
-def clipping():
-    pass
-
-def viewport_transformation():
-    pass
-
-def pipeline():
-    pass
-
-def draw_house(house_list, cam_x, cam_y, cam_z, camera_rotation):
-    homogenous_list = convert_to_homogenous(house_list)
-    world_to_camera_list = world_to_camera(object_to_world(homogenous_list, house_matrices),cam_x,cam_y,cam_z,camera_rotation)
-    clipping(world_to_camera_list)
+    clipped_list = []
     for i in world_to_camera_list:
-        pygame.draw.line(screen, RED, (i.start[0], i.start[1]), (i.end[0], i.end[1]))
+        clipped_matrix_start = clipping_matrix.dot(i.start)
+        clipped_matrix_end = clipping_matrix.dot(i.end)
+        w_start = clipped_matrix_start[3]
+        w_end = clipped_matrix_end[3]
+        x_start = clipped_matrix_start[0]
+        y_start = clipped_matrix_start[1]
+        z_start = clipped_matrix_start[2]
+        x_end = clipped_matrix_end[0]
+        y_end = clipped_matrix_end[1]
+        z_end = clipped_matrix_end[2]
 
 
-def draw_car(car_list, x, y, z, camera_rotation):
-    pass
+        if not (((x_start > w_start or x_start < -w_start) and (y_start > w_start or y_start < -w_start)) or
+				 ((x_end > w_end or x_end < -w_end) and (y_end > w_end or y_end < -w_end)) or
+				 ((z_start > w_start or z_start < -w_start) or (z_end > w_end or z_end < -w_end))):
+
+            screen_space_start = clipped_matrix_start/clipped_matrix_start[3]
+            screen_space_end = clipped_matrix_end/clipped_matrix_end[3]
+            clipped_list.append(Line3D([screen_space_start[0],screen_space_start[1],1],[screen_space_end[0],screen_space_end[1],1]))
+
+    return clipped_list
+
+
+def viewport_transformation(preview_list):
+    screen_view_matrix = np.array([[512 / 2, 0, 512 / 2],
+                                    [0, -512 / 2, 512 / 2],
+                                    [0, 0, 1]])
+    view_list = []
+    for line in preview_list:
+        startOut = screen_view_matrix.dot(line.start)
+        endOut = screen_view_matrix.dot(line.end)
+        view_list.append(Line3D(startOut, endOut))
+    return view_list
+
+def pipeline(list_type, matrix_type, line_color, cam_x, cam_y, cam_z, camera_rotation):
+    homogenous_list = convert_to_homogenous(list_type)
+    world_to_camera_list = world_to_camera(object_to_world(homogenous_list, matrix_type), cam_x, cam_y, cam_z,
+                                           camera_rotation)
+    preview_list = clipping(world_to_camera_list)
+    view_list = viewport_transformation(preview_list)
+
+    for i in view_list:
+        pygame.draw.line(screen, line_color, (i.start[0], i.start[1]), (i.end[0], i.end[1]))
+
+
 def draw_tires():
     pass
 
@@ -257,10 +294,65 @@ CAMERA_ROTATE = 0
 CAMERA_VIEW = "perspective"
 CAR_MOVE = -40
 TIRE_ROTATION = 0
-clipping_matrix = np.array([])
-screen_display_matrix = np.array([])
-house_matrices = np.array([])
-car_matrices = np.array([])
+
+
+house_matrices = np.array([
+                    [[1, 0, 0, 0],
+                    [0, 1, 0, 0],
+                    [0, 0, 1, -30],
+                    [0, 0, 0, 1]],
+
+                    [[1, 0, 0, -20],
+                    [0, 1, 0, 0],
+                    [0, 0, 1, 0],
+                    [0, 0, 0, 1]],
+
+                    [[1, 0, 0, -40],
+                    [0, 1, 0, 0],
+                    [0, 0, 1, 0],
+                    [0, 0, 0, 1]],
+
+                    [[1, 0, 0, -60],
+                    [0, 1, 0, 0],
+                    [0, 0, 1, 0],
+                    [0, 0, 0, 1]],
+
+                    [[math.cos(math.radians(-90)), 0, -math.sin(math.radians(-90)), -80],
+                    [0, 1, 0, 0],
+                    [math.sin(math.radians(-90)), 0, math.cos(math.radians(-90)), 20],
+                    [0, 0, 0, 1]],
+
+                    [[math.cos(math.radians(-90)), 0, -math.sin(math.radians(-90)), -80],
+                    [0, 1, 0, 0],
+                    [math.sin(math.radians(-90)), 0, math.cos(math.radians(-90)), 40],
+                    [0, 0, 0, 1]],
+
+                    [[math.cos(math.radians(180)), 0, -math.sin(math.radians(180)), -60],
+                    [0, 1, 0, 0],
+                    [math.sin(math.radians(180)), 0, math.cos(math.radians(180)), 60],
+                    [0, 0, 0, 1]],
+
+                    [[math.cos(math.radians(180)), 0, -math.sin(math.radians(180)), -40],
+                    [0, 1, 0, 0],
+                    [math.sin(math.radians(180)), 0, math.cos(math.radians(180)), 60],
+                    [0, 0, 0, 1]],
+
+                    [[math.cos(math.radians(180)), 0, -math.sin(math.radians(180)), -20],
+                    [0, 1, 0, 0],
+                    [math.sin(math.radians(180)), 0, math.cos(math.radians(180)), 60],
+                    [0, 0, 0, 1]],
+
+                    [[math.cos(math.radians(180)), 0, -math.sin(math.radians(180)), 0],
+                    [0, 1, 0, 0],
+                    [math.sin(math.radians(180)), 0, math.cos(math.radians(180)), 60],
+                    [0, 0, 0, 1]]
+                  ])
+car_matrices = np.array([
+                    [[1, 0, 0, -60],
+                    [0, 1, 0, 0],
+                    [0, 0, 1, 20],
+                    [0, 0, 0, 1]]
+                ])
 tire_matrices = np.array([])
 
 #Loop until the user clicks the close button.
@@ -333,13 +425,14 @@ while not done:
 
     #Viewer Code#
     #####################################################################
-    draw_house(house_line_list, CAMERA_X, CAMERA_Y, CAMERA_Z, CAMERA_ROTATE)
-    draw_car(car_line_list, CAMERA_X,CAMERA_Y, CAMERA_Z, CAMERA_ROTATE)
+    # draw_car(car_line_list, CAMERA_X, CAMERA_Y, CAMERA_Z, CAMERA_ROTATE)
+    pipeline(house_line_list, house_matrices, RED, CAMERA_X, CAMERA_Y, CAMERA_Z, CAMERA_ROTATE)
+    pipeline(car_line_list, car_matrices, GREEN, CAMERA_X, CAMERA_Y, CAMERA_Z, CAMERA_ROTATE)
 
 
-    for s in house_line_list:
-        #BOGUS DRAWING PARAMETERS SO YOU CAN SEE THE HOUSE WHEN YOU START UP
-        pygame.draw.line(screen, BLUE, (20*s.start.x+200, -20*s.start.y+200), (20*s.end.x+200, -20*s.end.y+200))
+    # for s in house_line_list:
+    #     #BOGUS DRAWING PARAMETERS SO YOU CAN SEE THE HOUSE WHEN YOU START UP
+    #     pygame.draw.line(screen, BLUE, (20*s.start.x+200, -20*s.start.y+200), (20*s.end.x+200, -20*s.end.y+200))
 
     # Go ahead and update the screen with what we've drawn.
     # This MUST happen after all the other drawing commands.
