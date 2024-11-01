@@ -1,5 +1,4 @@
 # Import a library of functions called 'pygame'
-import math as m
 import math
 import pygame
 from math import pi
@@ -171,10 +170,6 @@ def loadTire():
 
 
 
-
-# create quite a bit here i think
-
-
 def convert_to_homogenous(regular_points):
     homogenous_coordinates = []
 
@@ -205,14 +200,13 @@ def world_to_camera(object_to_world_list, cam_x,cam_y,cam_z,camera_rotation):
     return world_to_camera_list
 
 def clipping(world_to_camera_list):
-    near = .01
-    far = 100000
-    den = far - near
-    clip1 = (far + near) / den
-    clip2 = (-2 * far * near) / den
+    near_clipping_plane = .01
+    far_clipping_plane = 100000
+    clip_a = (far_clipping_plane + near_clipping_plane) / far_clipping_plane - near_clipping_plane
+    clip_b = (-2 * far_clipping_plane * near_clipping_plane) / far_clipping_plane - near_clipping_plane
     clipping_matrix = np.array([[1.73, 0, 0, 0],
                      [0, 1.73, 0, 0],
-                     [0, 0, clip1, clip2],
+                     [0, 0, clip_a, clip_b],
                      [0, 0, 1, 0]])
 
     clipped_list = []
@@ -241,24 +235,18 @@ def clipping(world_to_camera_list):
 
 
 def viewport_transformation(preview_list):
-    screen_view_matrix = np.array([[512 / 2, 0, 512 / 2],
+    screen_space_matrix = np.array([[512 / 2, 0, 512 / 2],
                                     [0, -512 / 2, 512 / 2],
                                     [0, 0, 1]])
     view_list = []
     for line in preview_list:
-        starting = screen_view_matrix.dot(line.start)
-        ending = screen_view_matrix.dot(line.end)
+        starting = screen_space_matrix.dot(line.start)
+        ending = screen_space_matrix.dot(line.end)
         view_list.append(Line3D(starting, ending))
     return view_list
 
-def pipeline(object_type, list_type, matrix_type, line_color, cam_x, cam_y, cam_z, camera_rotation):
+def pipeline(list_type, matrix_type, line_color, cam_x, cam_y, cam_z, camera_rotation):
     homogenous_list = convert_to_homogenous(list_type)
-
-
-    if object_type == "car":
-        add_tires(tire_line_list, tire_matrices, BLUE, CAMERA_X, CAMERA_Y, CAMERA_Z, CAMERA_ROTATE)
-
-
     world_to_camera_list = world_to_camera(object_to_world(homogenous_list, matrix_type), cam_x, cam_y, cam_z,camera_rotation)
     preview_list = clipping(world_to_camera_list)
     view_list = viewport_transformation(preview_list)
@@ -266,18 +254,7 @@ def pipeline(object_type, list_type, matrix_type, line_color, cam_x, cam_y, cam_
     for i in view_list:
         pygame.draw.line(screen, line_color, (i.start[0], i.start[1]), (i.end[0], i.end[1]))
 
-def add_tires(list_type, matrix_type, line_color, cam_x, cam_y, cam_z, camera_rotation):
-    pass
-    # homogenous_list = convert_to_homogenous(list_type)
-    # tire_positions = []
-    # for s in tire_matrices:
-    #     tire_positions.append(s.dot(car_matrices))
-    # world_to_camera_list = world_to_camera(object_to_world(homogenous_list, tire_positions), cam_x, cam_y, cam_z,camera_rotation)
-    # preview_list = clipping(world_to_camera_list)
-    # view_list = viewport_transformation(preview_list)
-    #
-    # for i in view_list:
-    #     pygame.draw.line(screen, line_color, (i.start[0], i.start[1]), (i.end[0], i.end[1]))
+
 # Initialize the game engine
 pygame.init()
  
@@ -305,7 +282,7 @@ tire_line_list = loadTire()
 CAMERA_X = 0
 CAMERA_Y = 0
 CAMERA_Z = -30
-CAMERA_ROTATE = 0
+CAMERA_ROTATE = 180
 CAMERA_VIEW = "perspective"
 CAR_MOVE = -40
 TIRE_ROTATION = 0
@@ -314,77 +291,67 @@ TIRE_ROTATION = 0
 house_matrices = np.array([
                     [[1, 0, 0, 0],
                     [0, 1, 0, 0],
-                    [0, 0, 1, -30],
+                    [0, 0, 1, 0],
                     [0, 0, 0, 1]],
 
-                    [[1, 0, 0, -20],
+                    [[1, 0, 0, 20],
                     [0, 1, 0, 0],
                     [0, 0, 1, 0],
                     [0, 0, 0, 1]],
 
-                    [[1, 0, 0, -40],
+                    [[1, 0, 0, 40],
                     [0, 1, 0, 0],
                     [0, 0, 1, 0],
                     [0, 0, 0, 1]],
 
-                    [[1, 0, 0, -60],
+                    [[1, 0, 0, 60],
                     [0, 1, 0, 0],
                     [0, 0, 1, 0],
                     [0, 0, 0, 1]],
 
-                    [[math.cos(math.radians(-90)), 0, -math.sin(math.radians(-90)), -80],
+                    [[math.cos(math.radians(180)), 0, -math.sin(math.radians(180)), 60],
                     [0, 1, 0, 0],
-                    [math.sin(math.radians(-90)), 0, math.cos(math.radians(-90)), 20],
+                    [math.sin(math.radians(180)), 0, math.cos(math.radians(180)), 40],
                     [0, 0, 0, 1]],
 
-                    [[math.cos(math.radians(-90)), 0, -math.sin(math.radians(-90)), -80],
+                    [[math.cos(math.radians(180)), 0, -math.sin(math.radians(180)), 40],
                     [0, 1, 0, 0],
-                    [math.sin(math.radians(-90)), 0, math.cos(math.radians(-90)), 40],
+                    [math.sin(math.radians(180)), 0, math.cos(math.radians(180)), 40],
                     [0, 0, 0, 1]],
 
-                    [[math.cos(math.radians(180)), 0, -math.sin(math.radians(180)), -60],
+                    [[math.cos(math.radians(180)), 0, -math.sin(math.radians(180)), 20],
                     [0, 1, 0, 0],
-                    [math.sin(math.radians(180)), 0, math.cos(math.radians(180)), 60],
-                    [0, 0, 0, 1]],
-
-                    [[math.cos(math.radians(180)), 0, -math.sin(math.radians(180)), -40],
-                    [0, 1, 0, 0],
-                    [math.sin(math.radians(180)), 0, math.cos(math.radians(180)), 60],
-                    [0, 0, 0, 1]],
-
-                    [[math.cos(math.radians(180)), 0, -math.sin(math.radians(180)), -20],
-                    [0, 1, 0, 0],
-                    [math.sin(math.radians(180)), 0, math.cos(math.radians(180)), 60],
+                    [math.sin(math.radians(180)), 0, math.cos(math.radians(180)), 40],
                     [0, 0, 0, 1]],
 
                     [[math.cos(math.radians(180)), 0, -math.sin(math.radians(180)), 0],
                     [0, 1, 0, 0],
-                    [math.sin(math.radians(180)), 0, math.cos(math.radians(180)), 60],
+                    [math.sin(math.radians(180)), 0, math.cos(math.radians(180)), 40],
                     [0, 0, 0, 1]]
                   ])
 car_matrices = np.array([
-                    [[1, 0, 0, -60],
+                    [[1, 0, 0, 30],
                     [0, 1, 0, 0],
                     [0, 0, 1, 20],
                     [0, 0, 0, 1]]
                 ])
 tire_matrices = np.array([
-                    [[1,0,0,-58],
+                    [[1,0,0,28],
                      [0,1,0,1],
                      [0,0,1,22.5],
                      [0,0,0,1]],
 
-                    [[1,0,0,-58],
+                    [[1,0,0,28],
                      [0,1,0,1],
                      [0,0,1,17.5],
                      [0,0,0,1]],
 
-                    [[1,0,0,-62],
+                    [[1,0,0,32],
                      [0,1,0,1],
                      [0,0,1,17.5],
                      [0,0,0,1]],
 
-                    [[1,0,0,-62],
+                    [[1,0,0,32],
                      [0,1,0,1],
                      [0,0,1,22.5],
                      [0,0,0,1]]
@@ -453,15 +420,15 @@ while not done:
         CAMERA_X = 0
         CAMERA_Y = 0
         CAMERA_Z = -30
-        CAMERA_ROTATE = 0
+        CAMERA_ROTATE = 180
         CAR_MOVE = -40
         TIRE_ROTATION = 0
 
     #Viewer Code#
     #####################################################################
-    pipeline("house", house_line_list, house_matrices, RED, CAMERA_X, CAMERA_Y, CAMERA_Z, CAMERA_ROTATE)
-    pipeline("car", car_line_list, car_matrices, GREEN, CAMERA_X, CAMERA_Y, CAMERA_Z, CAMERA_ROTATE)
-    pipeline("tire", tire_line_list, tire_matrices, BLUE, CAMERA_X, CAMERA_Y, CAMERA_Z, CAMERA_ROTATE)
+    pipeline(house_line_list, house_matrices, RED, CAMERA_X, CAMERA_Y, CAMERA_Z, CAMERA_ROTATE)
+    pipeline(car_line_list, car_matrices, GREEN, CAMERA_X, CAMERA_Y, CAMERA_Z, CAMERA_ROTATE)
+    pipeline(tire_line_list, tire_matrices, BLUE, CAMERA_X, CAMERA_Y, CAMERA_Z, CAMERA_ROTATE)
 
     # for s in house_line_list:
     #     #BOGUS DRAWING PARAMETERS SO YOU CAN SEE THE HOUSE WHEN YOU START UP
