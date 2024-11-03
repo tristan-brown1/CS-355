@@ -5,13 +5,20 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="e9842e79-0c9d-4195-bfba-046e1dc495e6" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/Lab8/Lab-8.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Lab7/Lab7.py" beforeDir="false" afterPath="$PROJECT_DIR$/Lab7/Lab7.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Python Script" />
+      </list>
+    </option>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -39,6 +46,11 @@
     &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
 }</component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\trist\Documents\GitHub\CS-355\Lab8" />
+    </key>
+  </component>
   <component name="RunManager">
     <configuration name="Lab7-3DProjection" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="CS-355" />
@@ -93,6 +105,7 @@
       <workItem from="1730343513388" duration="5395000" />
       <workItem from="1730349111142" duration="6128000" />
       <workItem from="1730417408990" duration="8111000" />
+      <workItem from="1730612089901" duration="78000" />
     </task>
     <servers />
   </component>
