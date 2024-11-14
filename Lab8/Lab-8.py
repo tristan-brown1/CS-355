@@ -66,15 +66,44 @@ class WireframeViewer(wf.WireframeGroup):
 
                     # Only draw faces that face us
                     if towards_us > 0:
+
+                        i_s = [0.0, 0.0, 0.0]
+                        i_d = [0.0, 0.0, 0.0]
+                        if np.dot(normal, self.light_vector) > 0:
+
+
+
+                            k_s = 0.25
+                            i_p = self.light_color
+                            o_s = colour
+
+                            k_gls = 21
+                            V = self.view_vector
+                            N = normal
+                            L = self.light_vector
+                            R = ((2 * L.dot(N)) * normal) - self.light_vector
+
+                            k_d = 0.65
+
+
+                            i_s = (i_p * (k_s * o_s)) * (V.dot(R))**k_gls
+
+                            i_d = i_p * (k_d * o_s) * (N.dot(self.light_vector))
+
                         m_ambient = 0.1
                         ambient = self.light_color * (m_ambient * colour)
+
+                        light_total = ambient + i_d + i_s
+                        light_total = np.clip(light_total, 0, 255)
 
                         # Your lighting code here
                         # Make note of the self.view_vector and self.light_vector
                         # Use the Phong model
 
                         # Once you have implemented diffuse and specular lighting, you will want to include them here
-                        light_total = ambient
+
+
+                        # light_total = ambient
 
                         pygame.draw.polygon(self.screen, light_total,
                                             [(nodes[node][0], nodes[node][1]) for node in face], 0)
@@ -104,9 +133,35 @@ class WireframeViewer(wf.WireframeGroup):
 
     def keyEvent(self, key):
 
+
         # Your code here
         if key == pygame.K_w:
             print("w is pressed")
+
+
+
+        if key == pygame.K_a:
+            print("a is pressed")
+
+
+
+        if key == pygame.K_s:
+            print("s is pressed")
+
+
+        if key == pygame.K_d:
+            print("d is pressed")
+
+
+        if key == pygame.K_q:
+            print("q is pressed")
+
+
+        if key == pygame.K_e:
+            print("e is pressed")
+
+
+
 
         return
 
