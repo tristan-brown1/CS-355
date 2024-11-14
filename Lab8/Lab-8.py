@@ -68,21 +68,20 @@ class WireframeViewer(wf.WireframeGroup):
                     if towards_us > 0:
                         m_ambient = 0.1
                         ambient = self.light_color * (m_ambient * colour)
-                        k_s = 0.25
+                        k_s = 0.5
                         i_p = self.light_color
-                        o_s = colour
-                        k_gls = 21
+                        k_gls = 3
                         V = self.view_vector
                         N = normal
                         L = self.light_vector
                         R = ((2 * L.dot(N)) * normal) - self.light_vector
-                        k_d = 0.65
+                        k_d = 0.4
 
                         #specualar
-                        i_s = (i_p * (k_s * o_s)) * (V.dot(R))**k_gls
+                        i_s = (i_p * (k_s * colour)) * (V.dot(R))**k_gls
 
                         #diffuse
-                        i_d = (i_p * (k_d * o_s)) * (N.dot(L))
+                        i_d = (i_p * (k_d * colour)) * (N.dot(L))
 
                         light_total = ambient + i_d + i_s
                         light_total = np.clip(light_total, 0, 255)
