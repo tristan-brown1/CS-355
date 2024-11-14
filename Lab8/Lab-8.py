@@ -66,32 +66,23 @@ class WireframeViewer(wf.WireframeGroup):
 
                     # Only draw faces that face us
                     if towards_us > 0:
-
-                        i_s = [0.0, 0.0, 0.0]
-                        i_d = [0.0, 0.0, 0.0]
-                        # if np.dot(normal, self.light_vector) > 0:
-
-
-
+                        m_ambient = 0.1
+                        ambient = self.light_color * (m_ambient * colour)
                         k_s = 0.25
                         i_p = self.light_color
                         o_s = colour
-
                         k_gls = 21
                         V = self.view_vector
                         N = normal
                         L = self.light_vector
                         R = ((2 * L.dot(N)) * normal) - self.light_vector
-
                         k_d = 0.65
 
-
+                        #specualar
                         i_s = (i_p * (k_s * o_s)) * (V.dot(R))**k_gls
 
-                        i_d = i_p * (k_d * o_s) * (N.dot(self.light_vector))
-
-                        m_ambient = 0.1
-                        ambient = self.light_color * (m_ambient * colour)
+                        #diffuse
+                        i_d = (i_p * (k_d * o_s)) * (N.dot(L))
 
                         light_total = ambient + i_d + i_s
                         light_total = np.clip(light_total, 0, 255)
@@ -101,9 +92,6 @@ class WireframeViewer(wf.WireframeGroup):
                         # Use the Phong model
 
                         # Once you have implemented diffuse and specular lighting, you will want to include them here
-
-
-                        # light_total = ambient
 
                         pygame.draw.polygon(self.screen, light_total,
                                             [(nodes[node][0], nodes[node][1]) for node in face], 0)
@@ -138,33 +126,33 @@ class WireframeViewer(wf.WireframeGroup):
         if key == pygame.K_w:
             print("w is pressed")
             resized_vector = np.append(self.light_vector[:3], 0)
-            self.light_vector = resized_vector.dot(wf.rotateXMatrix(.1))[:3]
+            self.light_vector = resized_vector.dot(wf.rotateXMatrix(.2))[:3]
 
 
         if key == pygame.K_a:
             print("a is pressed")
-            resized_vector = np.array([self.light_vector[0], self.light_vector[1], self.light_vector[2], 0])
-            self.light_vector = resized_vector.dot(wf.rotateXMatrix(.15))[:3]
+            resized_vector = np.append(self.light_vector[:3], 0)
+            self.light_vector = resized_vector.dot(wf.rotateYMatrix(-.2))[:3]
 
 
         if key == pygame.K_s:
             print("s is pressed")
-            resized_vector = np.array([self.light_vector[0], self.light_vector[1], self.light_vector[2], 0])
-            self.light_vector = resized_vector.dot(wf.rotateXMatrix(-.15))[:3]
+            resized_vector = np.append(self.light_vector[:3], 0)
+            self.light_vector = resized_vector.dot(wf.rotateXMatrix(-.2))[:3]
 
         if key == pygame.K_d:
-            print("d is pressed")
+            resized_vector = np.append(self.light_vector[:3], 0)
+            self.light_vector = resized_vector.dot(wf.rotateYMatrix(.2))[:3]
 
 
         if key == pygame.K_q:
-            print("q is pressed")
+            resized_vector = np.append(self.light_vector[:3], 0)
+            self.light_vector = resized_vector.dot(wf.rotateZMatrix(.2))[:3]
 
 
         if key == pygame.K_e:
-            print("e is pressed")
-
-
-
+            resized_vector = np.append(self.light_vector[:3], 0)
+            self.light_vector = resized_vector.dot(wf.rotateZMatrix(-.2))[:3]
 
         return
 
